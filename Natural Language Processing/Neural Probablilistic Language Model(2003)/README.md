@@ -7,7 +7,6 @@ This paper suggests language model based on Neural Network, which simultaneously
 
 ## 2. Approach
 There are 2 goals of Neural Language model.
-1. Learn Distributed representation of each words in vocabulary.
-2. Learn parameters of model which outputs conditional probability distribution of words.
-
+1. Learn <b>Distributed representation of each words</b> in vocabulary.
+2. Learn parameters of model which outputs <b>conditional probability distribution of next word given previous words</b>.  
 
