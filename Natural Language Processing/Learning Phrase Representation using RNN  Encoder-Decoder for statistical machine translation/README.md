@@ -11,7 +11,7 @@ The objective of this paper is rescoring phrase pairs through trained RNN Encode
 
 ---
 ## 2. RNN Encoder-Decoder
-###. RNN Encoder-Decoder Architecture
+### RNN Encoder-Decoder Architecture
 Let length of source sentence is N, length of output sentece is M.
 1. Encoder
 - RNN Encoder sequentially reads each token of the input sentence.
