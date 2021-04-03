@@ -8,7 +8,7 @@ The objective of this paper is rescoring phrase pairs through trained RNN Encode
 2. Statistical Machine Translation and RNN Encoder-Decoder model as a feature of SMT
 ---
 ### Mathmatical Formulation
-\[input sentence = (x_1, x_2, x_3...,x_N)\]
+$$ \[input sentence = (x_1, x_2, x_3...,x_N)\] $$
 
 ---
 ## 2. RNN Encoder-Decoder
