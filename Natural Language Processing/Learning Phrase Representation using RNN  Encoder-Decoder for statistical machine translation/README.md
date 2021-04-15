@@ -18,20 +18,21 @@ However, In this review, I will focus on RNN-Encoder Decoder architecture and ma
 ---
 ## 2. RNN Encoder-Decoder Architecture
 Let length of source sentence is N, length of output sentece is M.
-1. Encoder
+### 1. Encoder
 - RNN Encoder sequentially reads each token of the input sentence.
 - At each timestep, embedding layer transforms token into 100-dimensional embedding vector.
-- At each timestep, each hidden units compute hidden state h_<t>, given h_<t-1> and e_<t>, which is embedding vector of word_<t>. (h_<0> and e_<0> are initialized into zero vector)
+- At each timestep, each hidden units compute hidden state, given previous hidden state and current embedding vector.
 
 <img width="250" alt="encoder hidden state" src="https://user-images.githubusercontent.com/70640345/114360994-a03f8980-9bb0-11eb-84cb-000447f74f33.png">
-  
-Weight matrix W and U are dimension of 1000x100, 
+
+Weight matrix W and U are dimension of 1000x100
+
 - Encoder finally computes *1000-dimensional summary vector c* through computation below.
 
 <img width="118" alt="summary vector" src="https://user-images.githubusercontent.com/70640345/114361237-dc72ea00-9bb0-11eb-95c7-208b64adfdb5.png">
 
-2. Decoder
-- At each timestep,  
+### 2. Decoder
+ 
 
 ## 3. Hidden Units
-
+Author suggests unique hidden unit that can drop unnecessary memory and even less complex than LSTM cell. 
