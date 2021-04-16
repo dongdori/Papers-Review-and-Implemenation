@@ -4,9 +4,16 @@ from keras import Model
 from keras.layers import *
 
 def RNN_encoder_decoder_trainer(K,
-                                 max_len,
-                                 n_hidden_units = 1000,
-                                 dim_embed = 100):
+                                max_len,
+                                n_hidden_units = 1000,
+                                dim_embed = 100):
+    '''
+    K : size of Vocabulary
+    max_len : max length of input tokens(rests are padded with 0)
+    n_hidden_units : # hidden units in GRU
+    dim_embed : Dimension of Embedding vectors of words
+    
+    '''
     ############################ Encoder #######################################
     # input sentence tokens are labeled to int
     encoder_input = Input(shape = (max_len,), name = 'encoder_input_layer')
@@ -30,6 +37,7 @@ def RNN_encoder_decoder_trainer(K,
     s = Reshape([max_len, 2*n_hidden_units, 1])(s)
     s = MaxPool2D(pool_size=(1,2), strides=(1,2))(s)
     s = Reshape([max_len, n_hidden_units])(s)
+    # outputs are probability Distribution of next word given previous tokens and input sentence tokens
     outputs = TimeDistributed(Dense(K, activation = 'softmax'))(s)
     
     model = Model(inputs = [encoder_input, decoder_input], outputs= outputs)
