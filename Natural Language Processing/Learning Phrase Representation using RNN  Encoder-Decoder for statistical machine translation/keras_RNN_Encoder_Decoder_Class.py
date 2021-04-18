@@ -27,19 +27,23 @@ class RNN_encoder_decoder():
         self.s = None
         self.outputs = None
         
+        # source input sentence -> encoder -> h_enc, m_x 
         self.encoder_input = Input(shape = (self.max_len,))
         self.encoder_Embedding = Embedding(input_dim = self.K, output_dim = self.dim_embed, input_length = self.max_len)
         enc_emb = self.encoder_Embedding(self.encoder_input)
         m_x = GlobalAveragePooling1D()(enc_emb)
-        self.encoder_GRU = GRU(self.n_hidden_units, activation = 'tanh')
+        self.encoder_GRU = GRU(self.n_hidden_units, activation = 'tanh') # returns only last step output (dimension of n_hidden_units)
         h_enc = self.encoder_GRU(enc_emb)
         
+        # target input sentence, h_enc, m_x -> decoder -> output probability distribution <- target sentence
+        # decoder input sentence are lagged.
         self.decoder_input = Input(shape = (self.max_len,))
         self.decoder_Embedding = Embedding(input_dim = self.K, output_dim = self.dim_embed, input_length = self.max_len)
         dec_emb = self.decoder_Embedding(self.decoder_input)
-        self.decoder_GRU = GRU(self.n_hidden_units, activation = 'tanh', return_sequences=True, return_state=True)
+        self.decoder_GRU = GRU(self.n_hidden_units, activation = 'tanh', return_sequences=True, return_state=True) # returns outputs of each step (dim of max_len * n_hidden_units)
         s_dec, _ = self.decoder_GRU(dec_emb, initial_state = h_enc)
-        self.O_h = TimeDistributed(Dense(2*self.n_hidden_units, activation = 'linear'))
+        #create vector length of 2*n_hidden_units on each time step, to apply maxout activation
+        self.O_h = TimeDistributed(Dense(2*self.n_hidden_units, activation = 'linear')) 
         O_h = self.O_h(s_dec)
         self.O_y = TimeDistributed(Dense(2*self.n_hidden_units, activation = 'linear'))
         O_y = self.O_y(dec_emb)
@@ -47,24 +51,24 @@ class RNN_encoder_decoder():
         O_c = self.O_c(h_enc)
         self.O_m = Dense(2*self.n_hidden_units, activation = 'linear')
         O_m = self.O_m(m_x)
-        s = Add()([O_h, O_y, O_c, O_m])
+        s = Add()([O_h, O_y, O_c, O_m]) # add them all together
         s = Reshape([self.max_len, 2*self.n_hidden_units, 1])(s)
-        s = MaxPool2D(pool_size=(1,2), strides=(1,2))(s)
-        s = Reshape([self.max_len, self.n_hidden_units])(s)
-        self.output_layer = TimeDistributed(Dense(self.K, activation = 'softmax'))
+        s = MaxPool2D(pool_size=(1,2), strides=(1,2))(s) # max-out activation
+        s = Reshape([self.max_len, self.n_hidden_units])(s) # dimension of max_len * n_hidden_units
+        self.output_layer = TimeDistributed(Dense(self.K, activation = 'softmax')) #dimension of max_len * K(vocab_size) -> probability distribution of each words
         output = self.output_layer(s)
         return Model(inputs = [self.encoder_input, self.decoder_input], outputs = output)
     
     def Encoder_decoder_predict(self):
-        #encoding input
-        encoder_input = self.encoder_input
-        enc_emb = self.encoder_Embedding(encoder_input)
-        m_x = GlobalAveragePooling1D()(enc_emb)
-        h_enc = self.encoder_GRU(enc_emb)
+        encoder_input = self.encoder_input #source sentence(dimension of (max_len,))
+        enc_emb = self.encoder_Embedding(encoder_input) # dimension of (max_len, dim_embed)
+        m_x = GlobalAveragePooling1D()(enc_emb) # dimension of (, dim_embed)
+        h_enc = self.encoder_GRU(enc_emb) # creates encoding vector of source sentence (dimension of (, n_hidden_units))
         #decoding sequentially
-        decoder_input = self.decoder_input
-        dec_emb = self.decoder_Embedding(decoder_input)
-        s_dec, hidden_state = self.decoder_GRU(dec_emb, initial_state = h_enc)
+        decoder_input = self.decoder_input # single token(CLS token or previousely generated word token) - dimension of (1, 1)
+        dec_emb = self.decoder_Embedding(decoder_input) # dimension of (1, dim_embed)
+        # returns h_<i+1> given h_<i> and y_<i>. h_<0> = h_enc, and h_<i>, y_<i> is determined by previouslely generated word.
+        s_dec, hidden_state = self.decoder_GRU(dec_emb, initial_state = h_enc) 
         O_h = self.O_h(s_dec)
         O_y = self.O_y(dec_emb)
         O_m = self.O_m(m_x)
