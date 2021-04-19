@@ -3,7 +3,6 @@ from tensorflow import keras
 from keras import Model
 from keras.layers import *
 
-
 class RNN_encoder_decoder():
     def __init__(self, K, max_len, n_hidden_units = 1000, dim_embed = 100):
         self.K = K
@@ -59,33 +58,36 @@ class RNN_encoder_decoder():
         output = self.output_layer(s)
         return Model(inputs = [self.encoder_input, self.decoder_input], outputs = output)
     
-    def Encoder_decoder_predict(self, initial_state):
+    def predict_next_word_model(self, hideen_state = None):
         self.output_tokens = [0] 
-        encoder_input = self.encoder_input #source sentence(dimension of (max_len,))
+        encoder_input = Input(shape = (self.max_len,)) #source sentence(dimension of (max_len,))
         enc_emb = self.encoder_Embedding(encoder_input) # dimension of (max_len, dim_embed)
         m_x = GlobalAveragePooling1D()(enc_emb) # dimension of (, dim_embed)
         h_enc = self.encoder_GRU(enc_emb) # creates encoding vector of source sentence (dimension of (, n_hidden_units))
         #decoding sequentially
-        decoder_input = self.decoder_input # single token(CLS token or previousely generated word token) - dimension of (1, 1)
+        decoder_input = Input(shape = (1,)) # single token(CLS token or previousely generated word token) - dimension of (1, 1)
         dec_emb = self.decoder_Embedding(decoder_input) # dimension of (1, dim_embed)
         # returns h_<i+1> given h_<i> and y_<i>.
         # h_<0> = h_enc, y_<0> = first decoder_input, which is CLS token
         # h_<i>, y_<i> are determined by previouslely generated word.
         # h_<i> is hidden_state of previous word input, y_<i> is embedding vector of previous word input
-        s_dec, hidden_state = self.decoder_GRU(dec_emb, initial_state = ) 
+        if len(self.output_tokens) == 1:
+            s_dec, hidden_state = self.decoder_GRU(dec_emb, initial_state = h_enc)
+        else:
+            s_dec, hidden_state = self.decoder_GRU(dec_emb, initial_state = hidden_state)
         O_h = self.O_h(s_dec)
         O_y = self.O_y(dec_emb)
         O_m = self.O_m(m_x)
         O_c = self.O_c(h_enc)
         s = Add()([O_h, O_y, O_m, O_c])
-        s = Reshape([self.max_len, 2*self.n_hidden_units, 1])(s)
-        s = MaxPool2D(pool_size=(1,2), strides=(1,2))(s)
-        s = Reshape([self.max_len, self.n_hidden_units])(s)
+        s = Reshape([1, 2*self.n_hidden_units, 1])(s)
+        s = MaxPool2D(pool_size=(1,2), strides=(1,2), name = 'max_out')(s)
+        s = Reshape([1, self.n_hidden_units])(s)
         output = self.output_layer(s)
         
         # encoder_input : source sentence tokens
         # decoder_input : previously generated word token or CLS token
         # output : conditional probability distribution of next word, given source sentence and previously generated word
         # hidden_state : hidden state of previous step that needs to be feed into next call of decoder_GRU
-        return Model(inputs = [encoder_input, decoder_input], outputs = [output, hidden_state])
-        
+        model = Model(inputs = [encoder_input, decoder_input], outputs = [output, hidden_state])
+        return model
