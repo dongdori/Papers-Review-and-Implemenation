@@ -59,7 +59,8 @@ class RNN_encoder_decoder():
         output = self.output_layer(s)
         return Model(inputs = [self.encoder_input, self.decoder_input], outputs = output)
     
-    def Encoder_decoder_predict(self):
+    def Encoder_decoder_predict(self, initial_state):
+        self.output_tokens = [0] 
         encoder_input = self.encoder_input #source sentence(dimension of (max_len,))
         enc_emb = self.encoder_Embedding(encoder_input) # dimension of (max_len, dim_embed)
         m_x = GlobalAveragePooling1D()(enc_emb) # dimension of (, dim_embed)
@@ -67,8 +68,11 @@ class RNN_encoder_decoder():
         #decoding sequentially
         decoder_input = self.decoder_input # single token(CLS token or previousely generated word token) - dimension of (1, 1)
         dec_emb = self.decoder_Embedding(decoder_input) # dimension of (1, dim_embed)
-        # returns h_<i+1> given h_<i> and y_<i>. h_<0> = h_enc, and h_<i>, y_<i> is determined by previouslely generated word.
-        s_dec, hidden_state = self.decoder_GRU(dec_emb, initial_state = h_enc) 
+        # returns h_<i+1> given h_<i> and y_<i>.
+        # h_<0> = h_enc, y_<0> = first decoder_input, which is CLS token
+        # h_<i>, y_<i> are determined by previouslely generated word.
+        # h_<i> is hidden_state of previous word input, y_<i> is embedding vector of previous word input
+        s_dec, hidden_state = self.decoder_GRU(dec_emb, initial_state = ) 
         O_h = self.O_h(s_dec)
         O_y = self.O_y(dec_emb)
         O_m = self.O_m(m_x)
@@ -79,5 +83,9 @@ class RNN_encoder_decoder():
         s = Reshape([self.max_len, self.n_hidden_units])(s)
         output = self.output_layer(s)
         
+        # encoder_input : source sentence tokens
+        # decoder_input : previously generated word token or CLS token
+        # output : conditional probability distribution of next word, given source sentence and previously generated word
+        # hidden_state : hidden state of previous step that needs to be feed into next call of decoder_GRU
         return Model(inputs = [encoder_input, decoder_input], outputs = [output, hidden_state])
         
