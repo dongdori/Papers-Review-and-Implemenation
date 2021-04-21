@@ -22,7 +22,7 @@ To offset disadvantages of each approach, Authors suggest supervised method base
 2. Setting target values from word co-occurence matrix
   GloVe is different from matrix factorization based methods, because GloVe representation vectors learned by model with supervision. Therefore, appropriate target
   value have to be set. Let's look at formulas in co-occurence matrix and what they imply.
-  - X_{i,j} : occurence of word j in context of word i
+  -![CodeCogsEqn](https://user-images.githubusercontent.com/70640345/115564665-a42b8400-a2f3-11eb-9b1f-430304da47d4.gif) : occurence of word j in context of word i
   - X_{i} : occurence of any words in context of word i
   - P_{i,j} = X_{i,j} / X_{i} : probability that word j appears in context of word i (Co-occurence probability)
   - P_{i,k} / P_{j,k} : degree of likelihood that word i appears in context of word k rather than word j appears in context of word k (Ratio of co-occurence probability)  
