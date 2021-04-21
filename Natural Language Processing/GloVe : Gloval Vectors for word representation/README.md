@@ -8,7 +8,7 @@ There are two main approaches to learn word vector representation.
   - Advantage : Good performance on *word analogy tasks*, which means linear relationships between words are effectively learned.
   - Disadavantage : Gloval co-occurence statistics in corpus are not taken into account 
 2. Unsupervised method - Word co-occurence Matrix Factorization based methods
-  - Generating word co-occurence matrix X from entire corpus. *X<sub>i,j</sub>* denotes occurence of *word<sub>j</sub>* in context of *word<sub>i</sub>*
+  - Exploiting word co-occurence matrix X generated from entire corpus. *X<sub>i,j</sub>* denotes occurence of *word<sub>j</sub>* in context of *word<sub>i</sub>*
   - Advantage : *Entire word count statistics* are taken into account
   - Disadvantage : Poor performance on word analogy task relative to Local context window methods
 
@@ -31,7 +31,7 @@ Authors set **ratio of Co-occurence probability** as target of GloVe model.
 
 ### 3. Cost Function
 Let *w<sub>i</sub>* denotes embedding vector of word<sub>i</sub>.
-As I said earlier, target of this model to predict *P<sub>i,k</sub>/ P<sub>j,k</sub>* ,given word vectors. More accurately, The goal is **to get learned word representation vectors** through training model to accurately predict *P<sub>i,k</sub>/ P<sub>j,k</sub>*.
+As I said earlier, target of this model is to predict *P<sub>i,k</sub>/ P<sub>j,k</sub>* ,given word vectors. More accurately, The goal is **to get learned word vector representations** through training model to accurately predict *P<sub>i,k</sub>/ P<sub>j,k</sub>*.
 
 Cost function is defined as below. 
 
