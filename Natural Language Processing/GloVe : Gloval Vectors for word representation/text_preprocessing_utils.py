@@ -1,4 +1,4 @@
-import numpy as np
+def tokenize()
 
 def build_co_occurence_mat(tokens, window_size = 4, sym = True):
     V = np.nunique(tokens)
@@ -16,3 +16,5 @@ def build_co_occurence_mat(tokens, window_size = 4, sym = True):
         for word_c in counts.keys():
             mat[word_r, word_c] += counts[word_c]
     return mat
+
+
