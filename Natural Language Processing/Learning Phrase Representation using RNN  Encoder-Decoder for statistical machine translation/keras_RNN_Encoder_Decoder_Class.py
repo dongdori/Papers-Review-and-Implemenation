@@ -74,3 +74,21 @@ output = output_dense(s)
 infer_decoder = Model(inputs = [h_enc, m_x, decoder_input, decoder_initial_state], outputs = [output, hidden_state])
 
 # 5. sentence generator based on encoder and decoder
+def generate_sentence(source_sentence, encoder, decoder, max_length):
+    sample_tokens = [0]
+    length = 0
+    h_enc, m_x = encoder.predict(source_sentence)
+    terminate_condition = False
+    while terminate_condition == False:
+        if len(sample_tokens) == 1:
+            output, hs = decoder.predict([h_enc, m_x, np.array(sample_tokens[-1]), h_enc])
+        else:
+            output, hs = decoder.predict([h_enc, m_x, np.array(sample_tokens[-1]), hs])
+        next_token = np.argmax(output)
+        sample_tokens.append(next_token)
+        length += 1
+
+        if sample_tokens[-1] == 0 or length > max_length:
+            terminate_condition = True
+
+    return sample_tokens
