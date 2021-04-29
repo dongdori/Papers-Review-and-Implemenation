@@ -113,4 +113,19 @@ block_1 = keras.layers.Activation('relu')(block_1)
 block_1 = deconv_1_1(block_1)
 
 
+# set weights of Conv2DTranspose layers
+conv_layers = []
+conv_layers_idx = []
+for layer in model.layers:
+    if 'conv' in layer.name:
+        conv_layers.append(layer)
+deconv_layers = [deconv_1_1, deconv_1_2, deconv_2_1, deconv_2_2, deconv_3_1, deconv_3_2, deconv_3_3, deconv_3_4, deconv_4_1,  deconv_4_2, deconv_4_3,  deconv_4_4]
+
+for i, deconv_layer in enumerate(deconv_layers):
+    conv_layer = conv_layers[i]
+    W, _ = conv_layer.get_weights()
+    _, b = deconv_layer.get_weights()
+    deconv_layer.set_weights([W, np.zeros_like(b)])
+    
+# Model
 model_projection = Model(model.input, [block_1, block_2, block_3, block_4])
