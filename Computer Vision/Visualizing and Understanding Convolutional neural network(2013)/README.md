@@ -16,10 +16,19 @@ To project featuremaps to input pixel space, Authors suggest Unpooling, Rectifyi
 1. Unpooling : Max Pooling operation is non-invertible operation. However, we can approximate inverse operation using **switch**.   
                When max pooling is executed, location of max value in the kernel is recorded in switch. 
 2. Rectification : Rectify all negatives into zero
-3. Deconvolution : Apply transposed convolution operation using filters that are vertically and horizontally transposed.
+3. Deconvolution : Apply transposed convolution operation using filters that are vertically and horizontally transposed (Transposed Matrix).
 
 Given feature maps which are output of sequence of convolutional layers, We can execute inverse operations reversely, and finally reconstruct featuremaps to input pixel space.
 
 ## 3. Experimental Results
 
-### 3.1. 
+### 3.1. Feature map visualization
+The projections of each layer show the hierarchial nature.
+Figure below indicates Projected feature maps of each layer. top-9 strongest activations are projected down to input pixel space, therefore we can see image patterns that cause activation of certain layer.
+<img width="324" alt="20210501_152437" src="https://user-images.githubusercontent.com/70640345/116773682-de361c00-aa91-11eb-8534-3f0c267b87e9.png">
+
+ - Shallow layers are activated by relatively simple patterns (such as corners, edges)
+ - Deeper layers are actvated by relatively complicated patterns(such as face configurations)
+## 3.2. Feature evolution during training
+
+
