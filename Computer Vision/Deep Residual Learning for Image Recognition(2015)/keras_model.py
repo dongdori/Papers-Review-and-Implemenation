@@ -58,5 +58,5 @@ output = Dense(1000, activation = 'softmax')(x)
 model = keras.models.Model(input, output)
 
 
-model.compile(optimizer=keras.optimizers.SGD(learning_rate = 0.1), loss = 'cross_entropy')
+model.compile(optimizer=keras.optimizers.SGD(learning_rate = 0.1), loss = 'categorical_crossentropy')
 model.summary()
