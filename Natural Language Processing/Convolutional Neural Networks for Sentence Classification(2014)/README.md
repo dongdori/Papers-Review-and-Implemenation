@@ -5,4 +5,9 @@ Those pre-trained word vectors shows state-of-art performance on many kinds of s
 Author suggests novel approach for sentence classification based on 1D convolution and pre-trained word vectors(Word2Vec).
 
 ## 2. Approach
-Let each words to be represented as r-dimensional vector.
+
+### 2.1. Sentence Representation
+- Let each words to be represented as **r-dimensional vector**.
+- Let each sentences are tokenized and padded as length of **MAX_LEN**.
+
+Then each sentences can be represented as **MAX_LEN x r** dimensional matrix.
