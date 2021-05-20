@@ -22,7 +22,7 @@ where **function l(x) = log(1 + exp(-x))** and function **s(w<sub>t</sub>, w<sub
 * For example, for word **professor**, we can decompose it as tri-gram like {**<pr, pro, rof, ofe, fes, ess, sso, sor, or>**}
 * In practice, n is set to be 3~6.
 
-4. Modified optimization objective for subword information
+2. Modified optimization objective for subword information
 * Given a word *w*, let us set of n-grams of word *w* denoted as g<sub>w</sub> = {1,...G}.
 * Futhermore, let us denote vector representation of n-grams 1...G as z<sub>1</sub>... z<sub>G</sub>.
 
@@ -33,4 +33,7 @@ Then scoring function for word *w* and word *c* is as below.
 When vector representations of subwords are sufficiently learned, We can define vector representation of word *w* as simply
 
 <b><i>v<sub>w</sub></i> = SUM(z<sub>1</sub>, ... , z<sub>G</sub>)</b>
+
+## 3. Result
+
 
