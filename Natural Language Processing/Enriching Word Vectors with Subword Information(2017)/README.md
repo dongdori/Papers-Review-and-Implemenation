@@ -7,7 +7,7 @@ Therefore, authors suggest improve vector representations by representing single
 
 ## 2. Methodology
 
-### 2.1. CBOW with Negative Sampling
+### 2.1. Skip gram with Negative Sampling
 This paper utilizeS Skip-gram language model with negative sampling. 
 
 When training word representation without information of subword, Optimization objective is as below.
