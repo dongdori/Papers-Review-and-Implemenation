@@ -35,5 +35,23 @@ When vector representations of subwords are sufficiently learned, We can define 
 <b><i>v<sub>w</sub></i> = SUM(z<sub>1</sub>, ... , z<sub>G</sub>)</b>
 
 ## 3. Result
+1. Subword modeling resulted in better word vector representation, especially for morphologically rich language.
+
+2. Also subword vector representation enable us to define word representation vector for Out-Of-Vocabulary words. For example, let *transform* is OOV word, but if we have representation vector of subwords *trans* and *form*, We can just add them up to define word vecetor of *transform*!
+
+Therefore, we can express rare words which are OOV, by summing subword vector.
+
+3. Most interesting result was that **Morpheme(형태소)** of each word can be identified through analysis on subword representation vector and word representation vector.
+
+Let z<sub>1</sub>...z<sub>G</sub> denotes subword vectors of word w, *v<sub>w</sub>* denotes vector representation of word w
+
+Let v<sub>w-g</sub> denotes v<sub>w</sub> - z<sub>g</sub>
+
+If cosine distance between v<sub>w-g</sub> and v<sub>w</sub> is large, It implies subword g plays a crucial role in word w. Table below illustrates most important n-grams(subwords) in given words.
+
+<img width="235" alt="20210521_172513" src="https://user-images.githubusercontent.com/70640345/119106752-959ecc80-ba59-11eb-9ba4-d9136fb779ec.png">
 
 
+
+
+ 
