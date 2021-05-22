@@ -33,6 +33,20 @@ Seq2Seq model consists of Encoder and Decoder.
 
 1. Encoder is composed of 4 layers LSTM with 1000 dimensional hidden state.  Encoder encodes sequence of source sentence (*x<sub>1</sub> ... x<sub>T</sub>*) to *v*, a fixed size vector. 
 2. Decoder is also composed of 4 layers LSTM with 1000 dimensional hidden state. Decoder outputs most probable translation T which maximizes log probability *p(T|S)* using **left to right beam search algorithm**.
-
+ 
 #### Beam Search Algorithm
+During decoding process, To generate most likely sentence translation, Beam Search algorithm is used instead of Greedy algorithm.
+
+Greedy algorithm predicts single word with largest probability at each step. However, Beam search algorithm predicts B words at each step. Image below illustrates mechanism of beam search.
+
+![image](https://user-images.githubusercontent.com/70640345/119231944-2a8aee00-bb5e-11eb-9cf4-e6775ee444a9.png)
+
+Let B = 3, and Vocab size = 50000. output layer with softmax activation outputs 50000 dimensional vector.
+
+1. At first step, decoder selects 3 words with top 3 probability(a, i, the). And probability of each 3 words are recorded(p<sub>1</sub>, p<sub>2</sub>, p<sub>3</sub>).
+2. At next step, decoder outputs 50000 dimensional vector **v<sub>2</sub>** containing probability distribution of second word.
+3. Then, select 3 words with top 3 probability from concatenated vector [p<sub>1</sub>**v<sub>2</sub>**, p<sub>2</sub>**v<sub>2</sub>**, p<sub>3</sub>**v<sub>2</sub>**].
+   And probability of each 3 word combinations are recorded.
+4. Repeat 2, 3 until <EOS> token appears.
+  
 
