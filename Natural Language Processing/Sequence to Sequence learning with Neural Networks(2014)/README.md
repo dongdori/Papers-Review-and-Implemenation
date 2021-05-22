@@ -18,7 +18,13 @@ If source sentence *X* is encoded as fixed size vector *v*, *p(*y<sub>1</sub> ..
 
 <img width="343" alt="20210522_164455" src="https://user-images.githubusercontent.com/70640345/119218775-183c9000-bb1d-11eb-969e-5b553c7bbf05.png">
 
-To sum up, Seq2Seq encoder-decoder model parameterizes probability distribution of **next word**, given source sentence and previously translated word. 
+As a result, Seq2Seq encoder-decoder model parameterizes probability distribution of **next word**, given source sentence and previously translated word. 
+
+**Training objective** is as below.
+
+<img width="210" alt="20210522_172627" src="https://user-images.githubusercontent.com/70640345/119219968-0100a100-bb23-11eb-9592-2c6ac7cee8dc.png">
+
+*T* denotes target sentence and *S* denotes source sentence. *log(T|S)* log probability that sequence T appears given sequence S.
 
 ### 2.2. Architecture
 Seq2Seq model consists of Encoder and Decoder.
