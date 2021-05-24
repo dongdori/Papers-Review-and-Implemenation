@@ -43,9 +43,12 @@ Greedy algorithm predicts single word with largest probability at each step. How
 
 Let B = 3, and Vocab size = 50000. output layer with softmax activation outputs 50000 dimensional vector.
 
-1. At first step, decoder selects 3 words with top 3 probability(a, i, the). And probability of each 3 words are recorded(p<sub>1</sub>, p<sub>2</sub>, p<sub>3</sub>).
+1. At first step, decoder selects 3 words with top 3 probability(a, i, the). And probability of each 3 words are recorded (p<sub>1</sub>, p<sub>2</sub>, p<sub>3</sub>).
 2. At next step, decoder outputs 50000 dimensional vector **v<sub>2</sub>** containing probability distribution of second word.
-3. Then, select 3 words with top 3 probability from concatenated vector [p<sub>1</sub>**v<sub>2</sub>**, p<sub>2</sub>**v<sub>2</sub>**, p<sub>3</sub>**v<sub>2</sub>**](a dog, i am, the dog). And probability of each 3 word combinations are recorded.
-4. Repeat 2, 3 until EOS token appears.
+3. Then, select 3 words with top 3 probability from each vectors p<sub>1</sub>**v<sub>2</sub>**, p<sub>2</sub>**v<sub>2</sub>**, p<sub>3</sub>**v<sub>2</sub>**.
+   *[a cat, a dog, a people], [I do, I am, I did], [the cat, the dog, the horse]*.
+4. Select word combination with top probability from each word combination set. *[a cat, i am, the dog]* 
+   probability of each word combinations are recorded (p<sub>1</sub>, p<sub>2</sub>, p<sub>3</sub>).  
+5. Repeat 2, 3, 4 until EOS token appears.
   
 
