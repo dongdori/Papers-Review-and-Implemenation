@@ -8,9 +8,9 @@ Authors suggest two types of attention based NMT model, with effectiveness and s
 
 Neural machine translation system consists of *encoder* and *decoder*.
 
-In seq2seq model, Encoder encodes source sentence into fixed size vector(hidden state of last RNN unit), and Decoder computes conditional probability distribution of *next target word*, given *previously generated target words* and *encoded source sentence*.
+In seq2seq model, Encoder encodes source sentence into fixed size vector(hidden state of last RNN unit), and Decoder computes conditional probability distribution of **next target word**, given **previously generated target words** and **encoded source sentence**.
 
-To improve performance, decoder have to be able to focus on *specific part of source sentence* during decoding phase, which is called **Attention mechanism**.
+To improve performance, decoder have to be able to focus on **specific part of source sentence** during each decoding phase, which is called **Attention mechanism**.
 
 Authors suggest two methodologies for attention mechanism.
 
