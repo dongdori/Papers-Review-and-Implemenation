@@ -9,7 +9,7 @@ Authors suggest **Transformer**, which is able to be parallelized and solely bas
 ### 2.1. Overview
 <img width="260" alt="20210610_001430" src="https://user-images.githubusercontent.com/70640345/121381752-f34f7600-c980-11eb-847a-dfad6a406195.png">
 
-Picture above shows a single layer of Encoder and Decoder. Transformer consists of total 6 layers. Single encoder layer consists of 2 sublayers(Multihead Self Attention layer & Positionwise feed forward layer) and corresponding single decoder layer consists of 3 sublayers(Masked Multihead Attention layer, Multihead Attention layer, Positionwise feed forward layer).
+Picture above shows a single layer of Encoder and Decoder. Transformer consists of total 6 layers. Single encoder layer consists of 2 sublayers(**Multihead Self Attention layer & Positionwise feed forward layer**) and corresponding single decoder layer consists of 3 sublayers(**Masked Multihead Attention layer, Multihead Attention layer, Positionwise feed forward layer**).
 
 During training phase, source sentence and target sentence are encoded into *seq_len x d<sub>model</sub>* dimensional matrix, which is computed as a sum of token embeddings and positional encoding. 
 
