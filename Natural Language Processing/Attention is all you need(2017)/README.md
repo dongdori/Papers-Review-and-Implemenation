@@ -29,9 +29,25 @@ Formulation of Scaled dot product attention is as below.
 
 <img width="181" alt="20210611_000618" src="https://user-images.githubusercontent.com/70640345/121549583-f44bda80-ca48-11eb-9263-9dbea6ecb0f7.png">
 
-A<sub>i,j</sub> means attention score between word i and word j, where A = *Softmax(...)* term. and each rows of A*V* means contextual representation of each words. 
+A<sub>i,j</sub> means attention score between word i and word j, where A = *Softmax(...)* term.
+And each rows of A*V* is weighted average of each rows in V, where each weights are each row of A. Output of Scaled dot product attention is *len x d<sub>model</sub>* dimensional.
 
 #### 2.2.2. Multihead Attention
+Let *h* denotes the number of heads.
+Q, K, V are linearly projected into *len x d<sub>h</sub>* matrix through *h* heads. *d<sub>h</sub> = d<sub>model</sub> / h*.
+
+Let Q<sub>i</sub>, K<sub>i</sub>, V<sub>i</sub> denotes projection of Q, K, V in i-th head. 
+
+And let head<sub>i</sub> = Attention(Q<sub>i</sub>, K<sub>i</sub>, V<sub>i</sub>).
+
+And concatenated matrix <head<sub>1</sub> ... head<sub>h</sub>>, which is <i>len x h*d<sub>h</sub></i>, is linearly transformed into *len x d<sub>model</sub>* dimensional matrix
+
+Below is brief illustration of Multihead Attention.
+
+<img width="333" alt="20210612_000450" src="https://user-images.githubusercontent.com/70640345/121707774-e1e9a380-cb11-11eb-9497-5b68884c9fe4.png">
+
+
+
 
 ### 2.3. Encoder Structure
 
