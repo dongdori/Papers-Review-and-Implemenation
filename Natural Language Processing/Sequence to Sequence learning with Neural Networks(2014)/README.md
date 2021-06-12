@@ -31,6 +31,16 @@ Seq2Seq model consists of Encoder and Decoder.
 
 <img width="396" alt="20210522_162429" src="https://user-images.githubusercontent.com/70640345/119218223-44a2dd00-bb1a-11eb-8e1b-51fea4c607c9.png">
 
+To be specific, Architecture of encoder and decoder is as below.
+
+![encoder](https://user-images.githubusercontent.com/70640345/121769004-2e79c100-cb9c-11eb-8a0a-b15e2867e9e9.png)
+
+<encoder>
+ 
+ ![decoder](https://user-images.githubusercontent.com/70640345/121769011-3a658300-cb9c-11eb-8272-00b1b6bd5af3.png)
+
+ <decoder>
+
 1. Encoder is composed of 4 layers LSTM with 1000 dimensional hidden state.  Encoder encodes sequence of source sentence (*x<sub>1</sub> ... x<sub>T</sub>*) to *v*, a fixed size vector. 
 2. Decoder is also composed of 4 layers LSTM with 1000 dimensional hidden state. Decoder outputs most probable translation T which maximizes log probability *p(T|S)* using **left to right beam search algorithm**.
  
