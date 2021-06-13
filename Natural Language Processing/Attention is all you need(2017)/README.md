@@ -59,7 +59,13 @@ Multihead Attention layer outputs *max_len* x *d<sub>model</sub>* dimensional ma
 Final output *X<sub>output</sub>* is computed as *LayerNorm(X<sub>input</sub> + MultiheadAttention(X<sub>input</sub>))*.
 
 ### 2.3.2. Positionwise Feed Forward layer
-'Position' means each rows of X<sub>output</sub>, which denotes contextual word representation.
+'Position' means each rows of X<sub>output</sub>, which denotes contextual word representation. In positionwise feed forward layer, all rows are linearly transformed with same weights. It can be expressed as 1D-convolution operation. It can be formulated as below.  
+
+*FFN(x) = ReLu(xW<sub>1</sub> + b<sub>1</sub>)W<sub>2</sub> + b<sub>2</sub>*
+
+where *W<sub>1</sub>* is *len* x *2048* dimensional, and *W<sub>2</sub>* is *len* x *d<sub>model</sub>* dimensional.
+Each weight matrices are composed of identical columns(to perform **position-wise linear transformation**).  
+
 
 
 ### 2.4. Decoder Structure
