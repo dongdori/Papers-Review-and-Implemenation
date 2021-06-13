@@ -50,6 +50,17 @@ Below is brief illustration of Multihead Attention.
 
 
 ### 2.3. Encoder Structure
+Encoder consists of 2 sublayers, which are **Multihead Attention layer** and **Positionwise Feed Forward layer**. And at the top of each sublayers, there are **residual connection** and **normalization layer**.
+
+### 2.3.1. Multihead Attention layer
+Input embedding *X<sub>input</sub>*, which is a sum of token embedding and positional encoding, is *max_len* x *d<sub>model</sub>* dimensional matrix.
+Multihead Attention layer outputs *max_len* x *d<sub>model</sub>* dimensional matrix, where each rows are **contextual representations of words**.
+
+Final output *X<sub>output</sub>* is computed as *LayerNorm(X<sub>input</sub> + MultiheadAttention(X<sub>input</sub>))*.
+
+### 2.3.2. Positionwise Feed Forward layer
+'Position' means each rows of X<sub>output</sub>, which denotes contextual word representation.
+
 
 ### 2.4. Decoder Structure
 
