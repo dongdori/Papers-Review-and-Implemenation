@@ -68,10 +68,25 @@ Formula is,
 where *W<sub>1</sub>* is *len* x *2048* dimensional, and *W<sub>2</sub>* is *len* x *d<sub>model</sub>* dimensional.
 Each weight matrices are composed of identical columns(to perform **position-wise linear transformation**).  
 
-
-
 ### 2.4. Decoder Structure
+Decoder consists of 3 sublayers, which are **Masked multihead attention layer, Multihead attention layer, Positionwise feed forward layer**. Each sublayers of decoder are similar to that of encoder, except **Masked Multihead attention layer**.
+
+As objective of decoder at inference phase is to generate translation, decoder have to be auto-regressive, which leads to **Masked Multihead Attention layer**.    
+### 2.4.1. Masked Multihead Attention layer
+Masked multihead attention layer enables decoder to pay attention on previously generated words at inference phase.
+
+However, at training phase, basic Multihead attention layer learns context vector for all words in a sentence, even next words of current word.
+To eliminate illegal connection(connection between current word and next words), Masking is applied to Scaled-dot product attention before softmax.
+
+### 2.4.2. Multihead Attention layer(attention on source sentence)
+This layer enables decoder to pay attention on source sentence. 
+
+Let V, K are output of encoder, and Q is an output of Masked multihead attention layer. Q, K, V feeds into Multihead attention layer and computes attention of query Q on source sentence.  
+
+### 2.4.3. Position-Wise Feed Forward layer
+Same as described in 2.3.2.
 
 ### 2.5. Training Objective
+Training objective is to minimize cross-entropy loss between **predicted translation distribution** and **ground truth translation distribution**, which is same as Seq2Seq training objective.
 
 ### 2.6. Advantages of Self Attention
