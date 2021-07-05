@@ -9,9 +9,9 @@
 ### 2.1. Overview
 <img width="260" alt="20210610_001430" src="https://user-images.githubusercontent.com/70640345/121381752-f34f7600-c980-11eb-847a-dfad6a406195.png">
 
-  Picture above shows a single layer of Encoder and Decoder. Transformer consists of total 6 layers. Single encoder layer consists of 2 sublayers(```MultiheadSelfAttention``` layer & ```PositionwiseFeedForward``` layer) and corresponding single decoder layer consists of 3 sublayers(```Masked Multihead Attention``` layer, ```Multihead Attention layer```, ```Positionwise feed forward``` layer).
+  Picture above shows a single layer of Encoder and Decoder. Transformer consists of total 6 layers. Single encoder layer consists of 2 sublayers(```MultiheadSelfAttention``` layer & ```PositionwiseFeedForward``` layer) and corresponding single decoder layer consists of 3 sublayers(```Masked Multihead Attention``` layer, ```Multihead Attention``` layer, ```Positionwise feed forward``` layer).
 
-  During training phase, source sentence and target sentence are encoded into ```seq_len``` x ```d<sub>model</sub>``` dimensional matrix, which is computed as a sum of token embeddings and positional encoding. 
+  During training phase, source sentence and target sentence are encoded into *seq_len x d<sub>model</sub>* dimensional matrix, which is computed as a sum of token embeddings and positional encoding. 
 
 ### 2.2. Multihead Self Attention Mechanism
 Basic attention mechanism enables decoder to attend to specific part of source sentence. However, self attention mechanism enables encoder and decoder to consider context of sentence itself. Multihead self attention mechanism incorporates several steps.
@@ -19,10 +19,10 @@ Basic attention mechanism enables decoder to attend to specific part of source s
 #### 2.2.1. Scaled dot product Self Attention
 The goal of scaled dot product self attention is to compute relationship between each words in a single sentence. 
 
-Single Input setence can be represented as ```max_len``` x ```d<sub>model</sub>``` dimensional matrix, in which ```d<sub>model</sub>``` is dimension of embedding vector.
+Single Input setence can be represented as *max_len x d<sub>model</sub>* dimensional matrix, in which *d<sub>model</sub>* is dimension of embedding vector.
 Let's denote input sentence embedding matrix as I. 
 
-I is diverges into ```Q```(query), ```K```(keys), ```V```(values) which are ```max_len``` x ```d<sub>model</sub>``` dimensional and all identical. 
+I is diverges into ```Q```(query), ```K```(keys), ```V```(values) which are *max_len x d<sub>model</sub>* dimensional and all identical. 
 ```Q``` and ```K``` are used for computing attention vector ```a<sub>w</sub>``` for each words. And contextual representation of each words are computed as weighted average of ```V```.
 
 Formulation of Scaled dot product attention is as below.
@@ -30,11 +30,11 @@ Formulation of Scaled dot product attention is as below.
 <img width="181" alt="20210611_000618" src="https://user-images.githubusercontent.com/70640345/121549583-f44bda80-ca48-11eb-9263-9dbea6ecb0f7.png">
 
 A<sub>i,j</sub> means attention score between word i and word j, where A = *Softmax(...)* term.
-And each rows of ```tf.matmul(A, V)``` is weighted average of each rows in ```V```, where each weights are each row of ```A```. Output of Scaled dot product attention is ```len``` x ```d<sub>model</sub>``` dimensional.
+And each rows of ```tf.matmul(A, V)``` is weighted average of each rows in ```V```, where each weights are each row of ```A```. Output of Scaled dot product attention is *len x d<sub>model</sub>* dimensional.
 
 #### 2.2.2. Multihead Attention
 Let ```h``` denotes the number of heads.
-```Q```, ```K```, ```V``` are linearly projected into ```len``` x ```d<sub>h</sub>``` matrix through ```h``` heads. ```d<sub>h</sub>``` = ```d<sub>model</sub>``` / ```h```.
+```Q```, ```K```, ```V``` are linearly projected into *len x d<sub>h</sub>* matrix through ```h``` heads. *d<sub>h</sub>* = *d<sub>model</sub> / h*.
 
 Let Q<sub>i</sub>, K<sub>i</sub>, V<sub>i</sub> denotes projection of Q, K, V in i-th head. 
 
