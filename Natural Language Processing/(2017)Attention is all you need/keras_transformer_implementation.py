@@ -87,7 +87,7 @@ class DecoderBlock(Layer):
 
         return output
    
-# Encoder with n_layers
+# Encoder with n_layers (TokenPostionalEmbedding + Encoder Blocks)
 class Encoder(Layer):
     def __init__(self, n_layers, maxlen, num_heads, d_v, d_model, vocab_size, fnn):
         super(Encoder, self).__init__()
@@ -99,7 +99,7 @@ class Encoder(Layer):
         for encoderlayer in self.encoderlayers:
             x = encoderlayer(x)
         return x    
-# Decoder with n_layers
+# Decoder with n_layers (TokenPositionalEmbedding + Decoder Blocks)
 class Decoder(Layer):
     def __init__(self, n_layers, maxlen, num_heads, d_v, d_model, vocab_size, fnn):
         super(Decoder, self).__init__()
@@ -110,3 +110,16 @@ class Decoder(Layer):
         for decoderlayer in self.decoderlayers:
             x = decoderlayer(x, enc_output, mask)
         return x
+    
+# Transformer (Encoder + Decoder + output layer)    
+class TransFormer(Model):
+    def __init__(self, n_layers, num_heads, d_v, d_model, tar_vocab_size, src_vocab_size, tar_maxlen, src_maxlen, fnn):
+        super(TransFormer, self).__init__()
+        self.Encoder = Encoder(n_layers, src_maxlen, num_heads, d_v, d_model, src_vocab_size, fnn)
+        self.Decoder = Decoder(n_layers, tar_maxlen, num_heads, d_v, d_model, tar_vocab_size, fnn)
+        self.output_layer = Dense(tar_vocab_size, activation = 'softmax')
+    def call(self, input_src, input_tar, look_ahead_mask):
+        enc_output = self.Encoder(input_src)
+        dec_output = self.Decoder(input_tar, enc_output, look_ahead_mask)
+        output = self.output_layer(dec_output)
+        return output
