@@ -1,8 +1,5 @@
 import numpy as np
 import tensorflow as tf
-
-import matplotlib.pyplot as plt
-
 from tensorflow.keras.layers import *
 from tensorflow.keras.models import Model
 from tensorflow.keras import backend as K
@@ -28,7 +25,6 @@ class TokenAndPositionEmbedding(Layer):
     def call(self, x):
         token_emb = self.token_emb(x)
         return self.pos_encoding + token_emb
-    
 # Encoder Block
 class EncoderBlock(Layer):
     def __init__(self, maxlen, num_heads, d_v, d_model, fnn):
@@ -46,7 +42,7 @@ class EncoderBlock(Layer):
         self.positionalfeedforward_2 = Conv1D(filters = d_model, kernel_size = 1, activation = 'linear')
         self.layernorm_1 = LayerNormalization()
         self.layernorm_2 = LayerNormalization()
-    def call(self, inputs, training):
+    def call(self, inputs):
         # multihead attention & skip connection
         out1 = self.multiheadattention(query = inputs, value = inputs, key = inputs)
         out1 = self.layernorm_1(inputs + out1)
@@ -58,7 +54,6 @@ class EncoderBlock(Layer):
         output = self.layernorm_2(out1 + out2)
 
         return output
-      
 # Decoder Block
 class DecoderBlock(Layer):
     def __init__(self, maxlen, num_heads, d_v, d_model, fnn):
@@ -91,3 +86,27 @@ class DecoderBlock(Layer):
         output = self.layernorm_2(out1 + out2)
 
         return output
+   
+# Encoder with n_layers
+class Encoder(Layer):
+    def __init__(self, n_layers, maxlen, num_heads, d_v, d_model, vocab_size, fnn):
+        super(Encoder, self).__init__()
+        self.encoderlayers = [EncoderBlock(maxlen, num_heads, d_v, d_model, fnn) for _ in range(n_layers)]
+        self.embedding = TokenAndPositionEmbedding(max_len, vocab_size, d_model)
+    def call(self, inputs):
+        # token embedding + positional embedding
+        x = self.embedding(inputs)
+        for encoderlayer in self.encoderlayers:
+            x = encoderlayer(x)
+        return x    
+# Decoder with n_layers
+class Decoder(Layer):
+    def __init__(self, n_layers, maxlen, num_heads, d_v, d_model, vocab_size, fnn):
+        super(Decoder, self).__init__()
+        self.decoderlayers = [DecoderBlock(maxlen, num_heads, d_v, d_model, fnn) for _ in range(n_layers)]
+        self.embedding = TokenAndPositionEmbedding(maxlen, vocab_size, d_model)
+    def call(self, inputs, enc_output, mask):
+        x = self.embedding(inputs)
+        for decoderlayer in self.decoderlayers:
+            x = decoderlayer(x, enc_output, mask)
+        return x
