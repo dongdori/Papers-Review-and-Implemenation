@@ -26,28 +26,28 @@ def positional_encoding(position, d_model):
   return tf.cast(pos_encoding, dtype=tf.float32)
 
 ## 2. Functions for creating masks
-def create_look_back_mask(size):
-  mask = 1 - tf.linalg.band_part(tf.ones((size, size)), -1, 0)
-  return mask  # (seq_len, seq_len)
+def create_look_back_mask(max_len):
+  mask = 1 - tf.linalg.band_part(tf.ones((max_len, max_len)), -1, 0)
+  return mask  # dimension of (max_len, max_len)
 
 def create_padding_mask(seq):
   seq = tf.cast(tf.math.equal(seq, 0), tf.float32)
   # add extra dimensions to add the padding
   # to the attention logits.
-  return seq[:, tf.newaxis, tf.newaxis, :]  # (batch_size, 1, 1, seq_len)
+  return seq[:, tf.newaxis, tf.newaxis, :]  # dimension of (batch_size, 1, 1, max_len)
 
-def create_masks(inp, tar):
+def create_masks(enc_input, dec_input):
   # Encoder padding mask
-  enc_padding_mask = create_padding_mask(inp)
+  enc_padding_mask = create_padding_mask(enc_input)
   # decoder padding mask applied on encoder output(2nd multihead attention layer)
-  dec_padding_mask = create_padding_mask(inp)
+  dec_padding_mask = create_padding_mask(enc_input)
   # decoder masking on 1st multihead attention layer
-  look_back_mask = create_look_back_mask(tf.shape(tar)[1])
-  dec_target_padding_mask = create_padding_mask(tar)
-  # if token is [PAD] or future token -> masking
-  combined_mask = tf.maximum(dec_target_padding_mask, look_ahead_mask)
+  look_back_mask = create_look_back_mask(tf.shape(dec_input)[1])
+  dec_target_padding_mask = create_padding_mask(dec_input)
+  # if token is [PAD] or future token -> masking  for each samples in batch
+  combined_mask = tf.maximum(dec_target_padding_mask, look_back_mask)
 
-  return enc_padding_mask, combined_mask, dec_padding_mask
+  return enc_padding_mask, combined_mask, dec_padding_mask # dimension of (batch_size, 1, 1, enc_max_len), (batch_size, 1, dec_max_len, dec_max_len), (batch_size, 1, 1, enc_max_len)
 
 
 # Token Embedding + Sinusodial positional embedding Block
