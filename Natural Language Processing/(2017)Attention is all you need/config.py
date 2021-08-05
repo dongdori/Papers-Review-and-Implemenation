@@ -1,0 +1,10 @@
+config = {'N_LAYERS':2,
+        'NUM_HEADS':8,
+        'D_v':64,
+        'D_model':512,
+        'tar_vocab_size':30000,
+        'src_vocab_size':30000,
+        'tar_MAXLEN':50,
+        'src_MAXLEN':50,
+        'FNN':2048,
+        'BATCH_SIZE':32}
