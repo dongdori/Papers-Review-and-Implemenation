@@ -131,3 +131,6 @@ class TransFormer(Model):
         dec_output = self.Decoder(input_tar, enc_output, dec_padding_mask, look_back_mask)
         output = self.output_layer(dec_output)
         return output
+    
+def get_transformer(config):
+    return Transformer(config)
