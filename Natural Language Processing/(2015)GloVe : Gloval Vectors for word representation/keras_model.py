@@ -7,28 +7,26 @@ import tensorflow.keras.backend as K
 x_max = 100
 alpha = 3.0 / 4.0
 
-# model
-def glove_model(V, embed_dim):
-    input_target = Input(shape = (1,))
-    input_context = Input(shape = (1,))
-    W_target_embedding = Embedding(V, embed_dim, input_length = 1, name = 'central_target_embedding')
-    b_target_embedding = Embedding(V, 1, input_length = 1, name = 'bias_target_embedding')
-    W_context_embedding = Embedding(V, embed_dim, input_length = 1, name = 'central_context_embedding')
-    b_context_embedding = Embedding(V, 1, input_length = 1, name = 'bias_context_embedding')
-
-    target_embedding = W_target_embedding(input_target)
-    context_embedding = W_context_embedding(input_context)
-    target_bias = b_target_embedding(input_target)
-    context_bias = b_context_embedding(input_context)
-
-    dot_product = Dot(axes=-1)([target_embedding, context_embedding])
-    dot_product = Reshape((1, ))(dot_product)
-    target_bias = Reshape((1,))(target_bias)
-    context_bias = Reshape((1,))(context_bias)
-
-    output = Add()([dot_product, bias_target, bias_context])
-
-    return Model(inputs= [input_target, input_context], outputs = output)
+class glove_model(Model):
+    def __init__(self, embed_dim):
+        self.W_target = Embedding(V, embed_dim, input_length = 1, name = 'central_target_embedding')
+        self.b_target = Embedding(V, 1, input_length = 1, name = 'bias_target_embedding')
+        self.W_context = Embedding(V, embed_dim, input_length = 1, name = 'central_context_embedding')
+        self.b_context = Embedding(V, 1, input_length = 1, name = 'bias_context_embedding') 
+        self.dot = Dot(axes=-1)
+    def forward(self, context_input, target_input):
+        W_t = self.W_target(target_input)
+        b_t = self.b_target(target_input)
+        W_c = self.W_context(context_input)
+        b_c = self.b_context(context_input)
+        
+        x = self.dot([W_t, W_c])
+        x = x.reshape((1,))
+        b_c = b_c.reshape((1,))
+        b_t = b_t.reshape((1,))
+        
+        output = Add()([x, b_c, b_t])
+        return output
   
 # cost function
 def glove_loss(y_true, y_pred):
