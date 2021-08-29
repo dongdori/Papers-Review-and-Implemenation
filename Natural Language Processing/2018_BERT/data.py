@@ -23,9 +23,9 @@ class BERTDataset(Dataset):
         for _ in range(random.randint(self.corpus_lines if self.corpus_lines < 1000 else 1000)):
             self.random_file.__next__()
 
-    # function to execute random masking to each tokens
+     # function to execute random masking to each tokens
     def random_word(self, sentence):
-        tokens = sentence.split()
+        tokens = vocab.tokenize(sentence)
         output_label = []
         for i, t in enumerate(tokens):
             prob = random.random()
@@ -84,9 +84,13 @@ class BERTDataset(Dataset):
         return self.corpus_lines
 
     def __getitem__(self, index):
-        # t1_random, t2_random : list of tokens(applied masking)
-        # t1_label, t2_label : list of labels(nonzero only on masked position)
+        '''
+        t1_random, t2_random : list of tokens(applied masking)
+        t1_label, t2_label : list of labels(nonzero only on masked position)
+        '''
+        # sampling 2 sentences
         t1, t2, is_next = self.random_sentence(index)
+        # random masking on words
         t1_random, t1_label = self.random_word(t1)
         t2_random, t2_label = self.random_word(t2)
 
