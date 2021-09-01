@@ -1,3 +1,4 @@
+folder_path = '../input/celeba/img_align_celeba'
 batch_size = 64
 image_size = 128
 # dimension of noise vector
