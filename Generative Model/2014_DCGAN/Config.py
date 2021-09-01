@@ -1,5 +1,5 @@
 batch_size = 64
-image_size = 64
+image_size = 128
 # dimension of noise vector
 n_z = 100
 # final featuremaps of generator
