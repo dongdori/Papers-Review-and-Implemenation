@@ -26,9 +26,10 @@ class Generator(nn.Module):
         self.ngpu = ngpu
         self.main = nn.Sequential(
             # upsampling
-            nn.ConvTranspose2d(n_z, n_gf*8, (4,4), 1, 0, bias = False),
-            nn.BatchNorm2d(n_gf*8),
+            nn.ConvTranspose2d(n_z, n_gf*16, (4,4), 1, 0, bias = False),
+            nn.BatchNorm2d(n_gf*16),
             nn.ReLU(True),
+            Upblock(factor = 4),
             Upblock(factor = 3),
             Upblock(factor = 2),
             Upblock(factor = 1),
@@ -38,30 +39,34 @@ class Generator(nn.Module):
             )
     def forward(self, input):
         return self.main(input)
-      
+    
 # Discriminator
 class Discriminator(nn.Module):
     def __init__(self, ngpu):
         super(Discriminator, self).__init__()
         self.ngpu = ngpu
         self.main = nn.Sequential(
-            # input is (nc) x 64 x 64
+            # input is (nc) x 128 x 128
             nn.Conv2d(nc, n_df, 4, 2, 1, bias=False),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf) x 32 x 32
+            # state size. (ndf) x 64 x 64
             nn.Conv2d(n_df, n_df * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(n_df * 2),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*2) x 16 x 16
+            # state size. (ndf*2) x 32 x 32
             nn.Conv2d(n_df * 2, n_df * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(n_df * 4),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*4) x 8 x 8
+            # state size. (ndf*4) x 16 x 16
             nn.Conv2d(n_df * 4, n_df * 8, 4, 2, 1, bias=False),
             nn.BatchNorm2d(n_df * 8),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*8) x 4 x 4
-            nn.Conv2d(n_df * 8, 1, 4, 1, 0, bias=False),
+            # state size. (ndf*8) x 8 x 8
+            nn.Conv2d(n_df * 8, n_df * 16, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(n_df * 16),
+            nn.LeakyReLU(0.2, inplace = True),
+            # state size. (ndf*16) x 4 x 4
+            nn.Conv2d(n_df * 16, 1, 4,1,0, bias = False),
             nn.Sigmoid()
         )
     def forward(self, input):
