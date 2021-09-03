@@ -1,15 +1,3 @@
-import numpy as np
-import tensorflow as tf
-from tensorflow.keras.applications.resnet50 import ResNet50
-from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
-
-from tensorflow.keras.preprocessing import image
-import tensorflow.keras.backend as K
-
-import matplotlib.pyplot as plt
-import cv2
-from PIL import Image
-
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name, layer_before_softmax, pred_index=None):
     '''
     img_array : (1, width, height, 3) dimensional tensor
